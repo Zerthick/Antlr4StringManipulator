@@ -28,14 +28,24 @@ stat:   PRINT e (NEWLINE | ';')           {System.out.println($e.v);}
     ;
 
 e returns [Object v]
-    : a=e op=('*'|'/') b=e  {$v = eval((Integer)$a.v, $op.type, (Integer)$b.v);}
-    | a=e op=('+'|'-') b=e  {$v = eval((Integer)$a.v, $op.type, (Integer)$b.v);}
-    | '-' INT               {$v = -1 * $INT.int;}
+    : a=e op=( MUL | DIV ) b=e  
+        {   
+            if ($a.v instanceof Integer && $b.v instanceof Integer){
+                $v = eval((Integer)$a.v, $op.type, (Integer)$b.v);
+            }
+        }
+    | a=e op=( ADD | SUB ) b=e  
+        {
+            if ($a.v instanceof Integer && $b.v instanceof Integer){
+                $v = eval((Integer)$a.v, $op.type, (Integer)$b.v);
+            }
+        }
+    | SUB INT               {$v = -1 * $INT.int;}
     | INT                   {$v = $INT.int;}    
     | ID
       {
-      String id = $ID.text;
-      $v = memory.containsKey(id) ? memory.get(id) : 0;
+        String id = $ID.text;
+        $v = memory.containsKey(id) ? memory.get(id) : 0;
       }
     | '(' e ')'             {$v = $e.v;}       
     ; 

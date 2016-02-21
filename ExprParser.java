@@ -249,6 +249,7 @@ public class ExprParser extends Parser {
 		public EContext e;
 		public Token op;
 		public EContext b;
+		public TerminalNode SUB() { return getToken(ExprParser.SUB, 0); }
 		public TerminalNode INT() { return getToken(ExprParser.INT, 0); }
 		public TerminalNode ID() { return getToken(ExprParser.ID, 0); }
 		public List<EContext> e() {
@@ -257,6 +258,9 @@ public class ExprParser extends Parser {
 		public EContext e(int i) {
 			return getRuleContext(EContext.class,i);
 		}
+		public TerminalNode MUL() { return getToken(ExprParser.MUL, 0); }
+		public TerminalNode DIV() { return getToken(ExprParser.DIV, 0); }
+		public TerminalNode ADD() { return getToken(ExprParser.ADD, 0); }
 		public EContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -310,8 +314,8 @@ public class ExprParser extends Parser {
 				setState(31);
 				((EContext)_localctx).ID = match(ID);
 
-				      String id = (((EContext)_localctx).ID!=null?((EContext)_localctx).ID.getText():null);
-				      ((EContext)_localctx).v =  memory.containsKey(id) ? memory.get(id) : 0;
+				        String id = (((EContext)_localctx).ID!=null?((EContext)_localctx).ID.getText():null);
+				        ((EContext)_localctx).v =  memory.containsKey(id) ? memory.get(id) : 0;
 				      
 				}
 				break;
@@ -359,7 +363,11 @@ public class ExprParser extends Parser {
 						}
 						setState(42);
 						((EContext)_localctx).b = ((EContext)_localctx).e = e(7);
-						((EContext)_localctx).v =  eval((Integer)((EContext)_localctx).a.v, (((EContext)_localctx).op!=null?((EContext)_localctx).op.getType():0), (Integer)((EContext)_localctx).b.v);
+						   
+						                      if (((EContext)_localctx).a.v instanceof Integer && ((EContext)_localctx).b.v instanceof Integer){
+						                          ((EContext)_localctx).v =  eval((Integer)((EContext)_localctx).a.v, (((EContext)_localctx).op!=null?((EContext)_localctx).op.getType():0), (Integer)((EContext)_localctx).b.v);
+						                      }
+						                  
 						}
 						break;
 					case 2:
@@ -380,7 +388,11 @@ public class ExprParser extends Parser {
 						}
 						setState(47);
 						((EContext)_localctx).b = ((EContext)_localctx).e = e(6);
-						((EContext)_localctx).v =  eval((Integer)((EContext)_localctx).a.v, (((EContext)_localctx).op!=null?((EContext)_localctx).op.getType():0), (Integer)((EContext)_localctx).b.v);
+
+						                      if (((EContext)_localctx).a.v instanceof Integer && ((EContext)_localctx).b.v instanceof Integer){
+						                          ((EContext)_localctx).v =  eval((Integer)((EContext)_localctx).a.v, (((EContext)_localctx).op!=null?((EContext)_localctx).op.getType():0), (Integer)((EContext)_localctx).b.v);
+						                      }
+						                  
 						}
 						break;
 					}

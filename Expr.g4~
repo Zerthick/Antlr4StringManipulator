@@ -28,14 +28,24 @@ stat:   PRINT e (NEWLINE | ';')           {System.out.println($e.v);}
     ;
 
 e returns [Object v]
-    : a=e op=('*'|'/') b=e  {$v = eval((Integer)$a.v, $op.type, (Integer)$b.v);}
-    | a=e op=('+'|'-') b=e  {$v = eval((Integer)$a.v, $op.type, (Integer)$b.v);}
-    | '-' INT               {$v = -1 * $INT.int;}
+    : a=e op=( MUL | DIV ) b=e  
+        {   
+            if ($a.v instanceof Integer && $b.v instance of Integer){
+                $v = eval((Integer)$a.v, $op.type, (Integer)$b.v);
+            }
+        }
+    | a=e op=( ADD | SUB ) b=e  
+        {
+            if ($a.v instanceof Integer && $b.v instance of Integer){
+                $v = eval((Integer)$a.v, $op.type, (Integer)$b.v);
+            }
+        }
+    | SUB INT               {$v = -1 * $INT.int;}
     | INT                   {$v = $INT.int;}    
     | ID
       {
-      String id = $ID.text;
-      $v = memory.containsKey(id) ? memory.get(id) : 0;
+        String id = $ID.text;
+        $v = memory.containsKey(id) ? memory.get(id) : 0;
       }
     | '(' e ')'             {$v = $e.v;}       
     ; 
@@ -54,7 +64,7 @@ INTEGER : 'int' ;
  
 //Tokens
 INT :   [0-9]+ ;                // match integers
-STR: '"' [a-zA-Z0-9]* '"'    // match strings
+STR: '"' [a-zA-Z0-9]* '"' ;     // match strings
 ID  :   [a-zA-Z]+[0-9]* ;       // match identifiers
 NEWLINE:'\r'? '\n' ;            // return newlines to parser (is end-statement signal)
 WS  :   [ \t]+ -> skip ;        // toss out whitespace

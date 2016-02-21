@@ -36,6 +36,30 @@ stat:   PRINT e (NEWLINE | ';')           {System.out.println($e.v);}
                 memory.put(id, 0);
             }
         }
+    |   VAR a=idList STRING b=eList (NEWLINE | ';') 
+        {
+            List<String> ids = $a.list;
+            List<Object> exprs = $b.list;
+            if(ids.size() == exprs.size()){
+                for (int i = 0; i < ids.size(); i++){
+                    if(exprs.get(i) instanceof String){
+                        memory.put(ids.get(i), (String)exprs.get(i));
+                    }
+                }
+            }
+        }
+    |   VAR a=idList INTEGER b=eList (NEWLINE | ';') 
+        {
+            List<String> ids = $a.list;
+            List<Object> exprs = $b.list;
+            if(ids.size() == exprs.size()){
+                for (int i = 0; i < ids.size(); i++){
+                    if(exprs.get(i) instanceof Integer){
+                        memory.put(ids.get(i), (Integer)exprs.get(i));
+                    }
+                }
+            }
+        }
     |   NEWLINE                   
     ;
 

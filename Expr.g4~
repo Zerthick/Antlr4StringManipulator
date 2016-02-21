@@ -24,7 +24,12 @@ prog:   stat+ ;
 
 stat:   PRINT e (NEWLINE | ';')           {System.out.println($e.v);}
     |   ID ':=' e (NEWLINE | ';')    {memory.put($ID.text, $e.v);}
-    |   VAR a=idList STRING (NEWLINE | ';') {System.out.println($a.list);}
+    |   VAR a=idList STRING (NEWLINE | ';') 
+        {
+            for (String id : $a.list){
+                memory.put(id, "");
+            }
+        }
     |   NEWLINE                   
     ;
 
@@ -43,7 +48,7 @@ e returns [Object v]
         }
     | SUB INT               {$v = -1 * $INT.int;}
     | INT                   {$v = $INT.int;}
-    | STR                {$v = $STR.text;}    
+    | STR                   {$v = $STR.text;}    
     | ID
       {
         String id = $ID.text;
@@ -52,11 +57,14 @@ e returns [Object v]
     | '(' e ')'             {$v = $e.v;}       
     ; 
 
+//ID List
 idList returns [List<String> list]
 locals [
     List<String> ids = new ArrayList<>();
 ]
-    : ID {$ids.add($ID.text)} (',' ID {$ids.add($ID.text)})* {$list = $ids;};
+    : ID {$ids.add($ID.text);} (',' ID {$ids.add($ID.text);})* {$list = $ids;};
+
+//Expression List
 eList returns [List<Object> list]
 locals [
     List<Object> exprs = new ArrayList<>();

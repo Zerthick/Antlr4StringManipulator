@@ -24,7 +24,18 @@ prog:   stat+ ;
 
 stat:   PRINT e (NEWLINE | ';')           {System.out.println($e.v);}
     |   ID ':=' e (NEWLINE | ';')    {memory.put($ID.text, $e.v);}
-    |   VAR a=idList STRING (NEWLINE | ';') {System.out.println($a.list);}
+    |   VAR a=idList STRING (NEWLINE | ';') 
+        {
+            for (String id : $a.list){
+                memory.put(id, "");
+            }
+        }
+    |   VAR a=idList INTEGER (NEWLINE | ';') 
+        {
+            for (String id : $a.list){
+                memory.put(id, 0);
+            }
+        }
     |   NEWLINE                   
     ;
 

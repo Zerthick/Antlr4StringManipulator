@@ -41,7 +41,8 @@ e returns [Object v]
             }
         }
     | SUB INT               {$v = -1 * $INT.int;}
-    | INT                   {$v = $INT.int;}    
+    | INT                   {$v = $INT.int;}
+    | STR                {$v = $STR.text;}    
     | ID
       {
         String id = $ID.text;

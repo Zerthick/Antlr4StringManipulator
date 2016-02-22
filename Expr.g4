@@ -18,6 +18,13 @@ import java.util.*;
         }
         return 0;
     }
+    
+    String eval(String left, int op, String right) {
+        switch (op) {
+            case ADD : return left + right;
+        }
+        return "";
+    }
 }
 
 prog:   stat+ ;
@@ -66,7 +73,8 @@ stat:   PRINT e (NEWLINE | ';')             {System.out.println($e.v);}
                 }
             }
         }
-    |   NEWLINE                   
+    |   NEWLINE 
+    |   ';'                  
     ;
 
 e returns [Object v]
@@ -81,10 +89,13 @@ e returns [Object v]
             if ($a.v instanceof Integer && $b.v instanceof Integer){
                 $v = eval((Integer)$a.v, $op.type, (Integer)$b.v);
             }
+            if ($a.v instanceof String && $b.v instanceof String){
+                $v = eval((String)$a.v, $op.type, (String)$b.v);
+            }
         }
     | SUB INT               {$v = -1 * $INT.int;}
     | INT                   {$v = $INT.int;}
-    | STR                   {$v = $STR.text;}    
+    | STR                   {$v = $STR.text.replaceAll("\"", "");}    
     | ID
       {
         String id = $ID.text;

@@ -116,6 +116,20 @@ public class ExprParser extends Parser {
 	                }
 	                //Error
 	                return "";
+	            case ADD :
+	                if ( right > 0){
+	                    if ( right < left.length()){
+	                        return left.substring(right);
+	                    } else {
+	                        return "";
+	                    }
+	                } else {
+	                    if ( (right * -1) < left.length()){
+	                        return left.substring(0, left.length() + right);
+	                    } else {
+	                        return "";
+	                    }
+	                }
 	        }
 	        //Error
 	        return "";
@@ -425,7 +439,6 @@ public class ExprParser extends Parser {
 		public Token INT;
 		public Token STR;
 		public Token ID;
-		public EContext e;
 		public Token op;
 		public EContext b;
 		public TerminalNode SUB() { return getToken(ExprParser.SUB, 0); }
@@ -512,10 +525,10 @@ public class ExprParser extends Parser {
 				setState(72);
 				match(T__3);
 				setState(73);
-				((EContext)_localctx).e = e(0);
+				((EContext)_localctx).a = e(0);
 				setState(74);
 				match(T__4);
-				((EContext)_localctx).v =  _localctx.v;
+				((EContext)_localctx).v =  ((EContext)_localctx).a.v;
 				}
 				break;
 			default:
@@ -550,7 +563,7 @@ public class ExprParser extends Parser {
 							consume();
 						}
 						setState(81);
-						((EContext)_localctx).b = ((EContext)_localctx).e = e(8);
+						((EContext)_localctx).b = e(8);
 						   
 						                      if (((EContext)_localctx).a.v instanceof Integer && ((EContext)_localctx).b.v instanceof Integer){
 						                          ((EContext)_localctx).v =  eval((Integer)((EContext)_localctx).a.v, (((EContext)_localctx).op!=null?((EContext)_localctx).op.getType():0), (Integer)((EContext)_localctx).b.v);
@@ -582,13 +595,19 @@ public class ExprParser extends Parser {
 							consume();
 						}
 						setState(86);
-						((EContext)_localctx).b = ((EContext)_localctx).e = e(7);
+						((EContext)_localctx).b = e(7);
 
 						                      if (((EContext)_localctx).a.v instanceof Integer && ((EContext)_localctx).b.v instanceof Integer){
 						                          ((EContext)_localctx).v =  eval((Integer)((EContext)_localctx).a.v, (((EContext)_localctx).op!=null?((EContext)_localctx).op.getType():0), (Integer)((EContext)_localctx).b.v);
 						                      }
 						                      if (((EContext)_localctx).a.v instanceof String && ((EContext)_localctx).b.v instanceof String){
 						                          ((EContext)_localctx).v =  eval((String)((EContext)_localctx).a.v, (((EContext)_localctx).op!=null?((EContext)_localctx).op.getType():0), (String)((EContext)_localctx).b.v);
+						                      }
+						                      if (((EContext)_localctx).a.v instanceof String && ((EContext)_localctx).b.v instanceof Integer){
+						                          ((EContext)_localctx).v =  eval((String)((EContext)_localctx).a.v, (((EContext)_localctx).op!=null?((EContext)_localctx).op.getType():0), (Integer)((EContext)_localctx).b.v);
+						                      }
+						                      if (((EContext)_localctx).a.v instanceof Integer && ((EContext)_localctx).b.v instanceof String){
+						                          ((EContext)_localctx).v =  eval((String)((EContext)_localctx).b.v, (((EContext)_localctx).op!=null?((EContext)_localctx).op.getType():0), (Integer)((EContext)_localctx).a.v);
 						                      }
 						                      //Error
 						                  

@@ -40,6 +40,20 @@ import java.util.*;
                 }
                 //Error
                 return "";
+            case ADD :
+                if ( right > 0){
+                    if ( right < left.length()){
+                        return left.substring(right);
+                    } else {
+                        return "";
+                    }
+                } else {
+                    if ( (right * -1) < left.length()){
+                        return left.substring(0, left.length() + right);
+                    } else {
+                        return "";
+                    }
+                }
         }
         //Error
         return "";
@@ -121,6 +135,12 @@ e returns [Object v]
             if ($a.v instanceof String && $b.v instanceof String){
                 $v = eval((String)$a.v, $op.type, (String)$b.v);
             }
+            if ($a.v instanceof String && $b.v instanceof Integer){
+                $v = eval((String)$a.v, $op.type, (Integer)$b.v);
+            }
+            if ($a.v instanceof Integer && $b.v instanceof String){
+                $v = eval((String)$b.v, $op.type, (Integer)$a.v);
+            }
             //Error
         }
     | SUB INT               {$v = -1 * $INT.int;}
@@ -132,7 +152,7 @@ e returns [Object v]
         $v = memory.containsKey(id) ? memory.get(id) : 0;
         //Error
       }
-    | '(' e ')'             {$v = $e.v;}       
+    | '(' a=e ')'             {$v = $a.v;}       
     ; 
 
 //ID List

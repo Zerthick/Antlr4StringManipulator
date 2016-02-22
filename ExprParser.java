@@ -107,7 +107,7 @@ public class ExprParser extends Parser {
 	    String eval(String left, int op, int right) {
 	        switch (op) {
 	            case MUL :
-	                if ( right > 0){
+	                if ( right > 0 ){
 	                    StringBuilder sb = new StringBuilder();
 	                    for (int i = 0; i < right; i++) {
 	                        sb.append(left);
@@ -117,15 +117,29 @@ public class ExprParser extends Parser {
 	                //Error
 	                return "";
 	            case ADD :
-	                if ( right > 0){
-	                    if ( right < left.length()){
+	                if ( right > 0 ) {
+	                    if ( right < left.length() ){
 	                        return left.substring(right);
 	                    } else {
 	                        return "";
 	                    }
 	                } else {
-	                    if ( (right * -1) < left.length()){
+	                    if ( (right * -1) < left.length() ){
 	                        return left.substring(0, left.length() + right);
+	                    } else {
+	                        return "";
+	                    }
+	                }
+	            case SUB :
+	                if ( right > 0) {
+	                    if ( right < left.length() ){
+	                        return left.substring(0, left.length() - right);
+	                    } else {
+	                        return "";
+	                    }
+	                } else {
+	                    if ( (right * -1) < left.length() ){
+	                        return left.substring(right * -1);
 	                    } else {
 	                        return "";
 	                    }

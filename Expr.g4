@@ -22,8 +22,14 @@ import java.util.*;
 
 prog:   stat+ ;
 
-stat:   PRINT e (NEWLINE | ';')           {System.out.println($e.v);}
-    |   ID ':=' e (NEWLINE | ';')    {memory.put($ID.text, $e.v);}
+stat:   PRINT e (NEWLINE | ';')             {System.out.println($e.v);}
+    |   ID ':=' e (NEWLINE | ';')           {memory.put($ID.text, $e.v);}
+    |   ID '=' e (NEWLINE | ';')            
+        {
+            if(memory.containsKey($ID.text)){
+                memory.put($ID.text, $e.v);
+            }
+        }
     |   VAR a=idList STRING (NEWLINE | ';') 
         {
             for (String id : $a.list){

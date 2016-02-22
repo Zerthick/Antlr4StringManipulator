@@ -38,7 +38,7 @@ stat:   PRINT e (NEWLINE | ';')           {System.out.println($e.v);}
         }
     |   VAR a=idList STRING b=eList (NEWLINE | ';') 
         {
-            List<Object> ids = $a.list;
+            List<String> ids = $a.list;
             List<Object> exprs = $b.list;
             if(ids.size() == exprs.size()){
                 for (int i = 0; i < ids.size(); i++){
@@ -50,7 +50,7 @@ stat:   PRINT e (NEWLINE | ';')           {System.out.println($e.v);}
         }
     |   VAR a=idList INTEGER b=eList (NEWLINE | ';') 
         {
-            List<Object> ids = $a.list;
+            List<String> ids = $a.list;
             List<Object> exprs = $b.list;
             if(ids.size() == exprs.size()){
                 for (int i = 0; i < ids.size(); i++){

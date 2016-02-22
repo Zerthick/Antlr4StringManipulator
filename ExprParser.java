@@ -92,6 +92,7 @@ public class ExprParser extends Parser {
 	            case ADD : return left + right;
 	            case SUB : return left - right;
 	        }
+	        //Error
 	        return 0;
 	    }
 	    
@@ -99,6 +100,24 @@ public class ExprParser extends Parser {
 	        switch (op) {
 	            case ADD : return left + right;
 	        }
+	        //Error
+	        return "";
+	    }
+	    
+	    String eval(String left, int op, int right) {
+	        switch (op) {
+	            case MUL :
+	                if ( right > 0){
+	                    StringBuilder sb = new StringBuilder();
+	                    for (int i = 0; i < right; i++) {
+	                        sb.append(left);
+	                    }
+	                    return sb.toString();
+	                }
+	                //Error
+	                return "";
+	        }
+	        //Error
 	        return "";
 	    }
 
@@ -259,6 +278,7 @@ public class ExprParser extends Parser {
 				            if(memory.containsKey((((StatContext)_localctx).ID!=null?((StatContext)_localctx).ID.getText():null))){
 				                memory.put((((StatContext)_localctx).ID!=null?((StatContext)_localctx).ID.getText():null), ((StatContext)_localctx).e.v);
 				            }
+				            //Error
 				        
 				}
 				break;
@@ -334,6 +354,7 @@ public class ExprParser extends Parser {
 				                    if(exprs.get(i) instanceof String){
 				                        memory.put(ids.get(i), (String)exprs.get(i));
 				                    }
+				                    //Error
 				                }
 				            }
 				        
@@ -365,6 +386,7 @@ public class ExprParser extends Parser {
 				                    if(exprs.get(i) instanceof Integer){
 				                        memory.put(ids.get(i), (Integer)exprs.get(i));
 				                    }
+				                    //Error
 				                }
 				            }
 				        
@@ -481,6 +503,7 @@ public class ExprParser extends Parser {
 
 				        String id = (((EContext)_localctx).ID!=null?((EContext)_localctx).ID.getText():null);
 				        ((EContext)_localctx).v =  memory.containsKey(id) ? memory.get(id) : 0;
+				        //Error
 				      
 				}
 				break;
@@ -532,6 +555,13 @@ public class ExprParser extends Parser {
 						                      if (((EContext)_localctx).a.v instanceof Integer && ((EContext)_localctx).b.v instanceof Integer){
 						                          ((EContext)_localctx).v =  eval((Integer)((EContext)_localctx).a.v, (((EContext)_localctx).op!=null?((EContext)_localctx).op.getType():0), (Integer)((EContext)_localctx).b.v);
 						                      }
+						                      if (((EContext)_localctx).a.v instanceof String && ((EContext)_localctx).b.v instanceof Integer){
+						                          ((EContext)_localctx).v =  eval((String)((EContext)_localctx).a.v, (((EContext)_localctx).op!=null?((EContext)_localctx).op.getType():0), (Integer)((EContext)_localctx).b.v);
+						                      }
+						                      if (((EContext)_localctx).a.v instanceof Integer && ((EContext)_localctx).b.v instanceof String){
+						                          ((EContext)_localctx).v =  eval((String)((EContext)_localctx).b.v, (((EContext)_localctx).op!=null?((EContext)_localctx).op.getType():0), (Integer)((EContext)_localctx).a.v);
+						                      }
+						                      //Error
 						                  
 						}
 						break;
@@ -560,6 +590,7 @@ public class ExprParser extends Parser {
 						                      if (((EContext)_localctx).a.v instanceof String && ((EContext)_localctx).b.v instanceof String){
 						                          ((EContext)_localctx).v =  eval((String)((EContext)_localctx).a.v, (((EContext)_localctx).op!=null?((EContext)_localctx).op.getType():0), (String)((EContext)_localctx).b.v);
 						                      }
+						                      //Error
 						                  
 						}
 						break;

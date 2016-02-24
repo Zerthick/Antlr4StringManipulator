@@ -12,11 +12,15 @@ import java.util.*;
     int eval(int left, int op, int right) {
         switch ( op ) {
             case MUL : return left * right;
-            case DIV : return left / right;
+            case DIV :
+                if (right == 0){
+                    error("ERROR: DIVIDE BY ZERO");
+                } 
+                return left / right;
             case ADD : return left + right;
             case SUB : return left - right;
         }
-        //Error
+        error();
         return 0;
     }
     
@@ -24,21 +28,21 @@ import java.util.*;
         switch (op) {
             case ADD : return left + right;
         }
-        //Error
+        error();
         return "";
     }
     
     String eval(String left, int op, int right) {
         switch (op) {
             case MUL :
-                if ( right > 0 ){
+                if ( right >= 0 ){
                     StringBuilder sb = new StringBuilder();
                     for (int i = 0; i < right; i++) {
                         sb.append(left);
                     }
                     return sb.toString();
                 }
-                //Error
+                error("ERROR: NEGATIVE STRING MULTIPLIER");
                 return "";
             case ADD :
                 if ( right > 0 ) {
@@ -57,7 +61,7 @@ import java.util.*;
             case SUB :
                 if ( right > 0) {
                     if ( right < left.length() ){
-                        return left.substring(0, left.length() + right);
+                        return left.substring(0, left.length() - right);
                     } else {
                         return "";
                     }
@@ -69,21 +73,43 @@ import java.util.*;
                     }
                 }
         }
-        //Error
+        error();
         return "";
+    }
+    
+    void error() {
+        error("SYNTAX ERROR");
+    }
+    
+    void error(String msg){
+        System.err.println(msg);
+        System.exit(0);
     }
 }
 
 prog:   stat+ ;
 
 stat:   PRINT e (NEWLINE | ';')             {System.out.println($e.v);}
-    |   ID ':=' e (NEWLINE | ';')           {memory.put($ID.text, $e.v);}
+    |   ID ':=' e (NEWLINE | ';')           
+        {
+            if(memory.containsKey($ID.text)){ //If the variable to be declared already exists
+                error();
+            } else {
+                memory.put($ID.text, $e.v);
+            }
+        }
     |   ID '=' e (NEWLINE | ';')            
         {
             if(memory.containsKey($ID.text)){
-                memory.put($ID.text, $e.v);
+                if ((memory.get($ID.text) instanceof String && $e.v instanceof String) ||
+                    (memory.get($ID.text) instanceof Integer && $e.v instanceof Integer)){ //If the types match
+                    memory.put($ID.text, $e.v);
+                } else {
+                    error();
+                }
+            } else {
+                error();
             }
-            //Error
         }
     |   VAR a=idList STRING (NEWLINE | ';') 
         {
@@ -97,7 +123,7 @@ stat:   PRINT e (NEWLINE | ';')             {System.out.println($e.v);}
                 memory.put(id, 0);
             }
         }
-    |   VAR a=idList STRING b=eList (NEWLINE | ';') 
+    |   VAR a=idList STRING '=' b=eList (NEWLINE | ';') 
         {
             List<String> ids = $a.list;
             List<Object> exprs = $b.list;
@@ -105,12 +131,15 @@ stat:   PRINT e (NEWLINE | ';')             {System.out.println($e.v);}
                 for (int i = 0; i < ids.size(); i++){
                     if(exprs.get(i) instanceof String){
                         memory.put(ids.get(i), (String)exprs.get(i));
+                    } else {
+                        error();
                     }
-                    //Error
                 }
+            } else {
+                error();
             }
         }
-    |   VAR a=idList INTEGER b=eList (NEWLINE | ';') 
+    |   VAR a=idList INTEGER '=' b=eList (NEWLINE | ';') 
         {
             List<String> ids = $a.list;
             List<Object> exprs = $b.list;
@@ -118,9 +147,12 @@ stat:   PRINT e (NEWLINE | ';')             {System.out.println($e.v);}
                 for (int i = 0; i < ids.size(); i++){
                     if(exprs.get(i) instanceof Integer){
                         memory.put(ids.get(i), (Integer)exprs.get(i));
+                    } else {
+                        error();
                     }
-                    //Error
                 }
+            } else {
+                error();
             }
         }
     |   NEWLINE 
@@ -132,39 +164,46 @@ e returns [Object v]
         {   
             if ($a.v instanceof Integer && $b.v instanceof Integer){
                 $v = eval((Integer)$a.v, $op.type, (Integer)$b.v);
-            }
-            if ($a.v instanceof String && $b.v instanceof Integer){
+            } else if ($a.v instanceof String && $b.v instanceof Integer){
                 $v = eval((String)$a.v, $op.type, (Integer)$b.v);
-            }
-            if ($a.v instanceof Integer && $b.v instanceof String){
+            } else if ($a.v instanceof Integer && $b.v instanceof String){
                 $v = eval((String)$b.v, $op.type, (Integer)$a.v);
+            } else {
+                error();
             }
-            //Error
         }
     | a=e op=( ADD | SUB ) b=e  
         {
             if ($a.v instanceof Integer && $b.v instanceof Integer){
                 $v = eval((Integer)$a.v, $op.type, (Integer)$b.v);
-            }
-            if ($a.v instanceof String && $b.v instanceof String){
+            } else if ($a.v instanceof String && $b.v instanceof String){
                 $v = eval((String)$a.v, $op.type, (String)$b.v);
-            }
-            if ($a.v instanceof String && $b.v instanceof Integer){
+            } else if ($a.v instanceof String && $b.v instanceof Integer){
                 $v = eval((String)$a.v, $op.type, (Integer)$b.v);
-            }
-            if ($a.v instanceof Integer && $b.v instanceof String){
+            } else if ($a.v instanceof Integer && $b.v instanceof String){
                 $v = eval((String)$b.v, $op.type, (Integer)$a.v);
+            } else {
+                error();
             }
-            //Error
         }
-    | SUB INT               {$v = -1 * $INT.int;}
+    | SUB a=e               
+        {
+            if($a.v instance of Integer){
+                $v = -1 * (Integer)$a.v;
+            } else {
+                error();
+            }
+        }
     | INT                   {$v = $INT.int;}
     | STR                   {$v = $STR.text.replaceAll("\"", "");}    
     | ID
       {
         String id = $ID.text;
-        $v = memory.containsKey(id) ? memory.get(id) : 0;
-        //Error
+        if (memory.containsKey(id)){
+            $v = memory.get(id);
+        } else {
+            error();
+        }
       }
     | '(' a=e ')'             {$v = $a.v;}       
     ; 

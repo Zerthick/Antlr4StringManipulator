@@ -188,7 +188,7 @@ e returns [Object v]
         }
     | SUB a=e               
         {
-            if($a.v instance of Integer){
+            if($a.v instanceof Integer){
                 $v = -1 * (Integer)$a.v;
             } else {
                 error();

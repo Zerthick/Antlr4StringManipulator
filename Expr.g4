@@ -89,8 +89,8 @@ import java.util.*;
 
 prog:   stat+ ;
 
-stat:   PRINT e (NEWLINE | ';')             {System.out.println($e.v);}
-    |   ID ':=' e (NEWLINE | ';')           
+stat:   PRINT e (';' NEWLINE | NEWLINE | ';')             {System.out.println($e.v);}
+    |   ID ':=' e (';' NEWLINE | NEWLINE | ';')           
         {
             if(memory.containsKey($ID.text)){ //If the variable to be declared already exists
                 error();
@@ -98,7 +98,7 @@ stat:   PRINT e (NEWLINE | ';')             {System.out.println($e.v);}
                 memory.put($ID.text, $e.v);
             }
         }
-    |   ID '=' e (NEWLINE | ';')            
+    |   ID '=' e (';' NEWLINE | NEWLINE | ';')            
         {
             if(memory.containsKey($ID.text)){
                 if ((memory.get($ID.text) instanceof String && $e.v instanceof String) ||
@@ -111,19 +111,19 @@ stat:   PRINT e (NEWLINE | ';')             {System.out.println($e.v);}
                 error();
             }
         }
-    |   VAR a=idList STRING (NEWLINE | ';') 
+    |   VAR a=idList STRING ( ';' NEWLINE | NEWLINE | ';') 
         {
             for (String id : $a.list){
                 memory.put(id, "");
             }
         }
-    |   VAR a=idList INTEGER (NEWLINE | ';') 
+    |   VAR a=idList INTEGER (';' NEWLINE | NEWLINE | ';') 
         {
             for (String id : $a.list){
                 memory.put(id, 0);
             }
         }
-    |   VAR a=idList STRING '=' b=eList (NEWLINE | ';') 
+    |   VAR a=idList STRING '=' b=eList (';' NEWLINE | NEWLINE | ';') 
         {
             List<String> ids = $a.list;
             List<Object> exprs = $b.list;
@@ -139,7 +139,7 @@ stat:   PRINT e (NEWLINE | ';')             {System.out.println($e.v);}
                 error();
             }
         }
-    |   VAR a=idList INTEGER '=' b=eList (NEWLINE | ';') 
+    |   VAR a=idList INTEGER '=' b=eList (';' NEWLINE | NEWLINE | ';') 
         {
             List<String> ids = $a.list;
             List<Object> exprs = $b.list;
@@ -154,9 +154,7 @@ stat:   PRINT e (NEWLINE | ';')             {System.out.println($e.v);}
             } else {
                 error();
             }
-        }
-    |   NEWLINE 
-    |   ';'                  
+        }                  
     ;
 
 e returns [Object v]

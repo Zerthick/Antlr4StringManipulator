@@ -1,4 +1,4 @@
-/** Grammar from tour chapter augmented with actions */
+/** Chase Greco - Adapted from Grammar from tour chapter augmented with actions */
 grammar Expr;
 
 @header {
@@ -226,7 +226,7 @@ DIV : '/' ;
 ADD : '+' ;
 SUB : '-' ;
 
-//KEYWORDS
+//Keywords
 VAR : 'var' ;
 PRINT : 'print' ;
 STRING : 'string' ;
@@ -235,6 +235,6 @@ INTEGER : 'int' ;
 //Tokens
 INT :   [0-9]+ ;                // match integers
 STR: '"' [a-zA-Z0-9]* '"' ;     // match strings
-ID  :   [a-zA-Z]+[0-9]* ;       // match identifiers
+ID  :   [a-zA-Z]+[a-zA-Z0-9]* ;       // match identifiers
 NEWLINE:'\r'? '\n' ;            // return newlines to parser (is end-statement signal)
 WS  :   [ \t]+ -> skip ;        // toss out whitespace

@@ -235,6 +235,6 @@ INTEGER : 'int' ;
 //Tokens
 INT :   [0-9]+ ;                // match integers
 STR: '"' [a-zA-Z0-9]* '"' ;     // match strings
-ID  :   [a-zA-Z]+[a-zA-Z0-9]* ;       // match identifiers
+ID  :   [a-zA-Z]+[a-zA-Z0-9]* ; // match identifiers
 NEWLINE:'\r'? '\n' ;            // return newlines to parser (is end-statement signal)
 WS  :   [ \t]+ -> skip ;        // toss out whitespace
